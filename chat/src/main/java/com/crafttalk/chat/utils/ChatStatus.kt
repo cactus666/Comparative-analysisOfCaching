@@ -1,8 +1,0 @@
-package com.crafttalk.chat.utils
-
-enum class ChatStatus {
-    ON_CHAT_SCREEN_FOREGROUND_APP,
-    NOT_ON_CHAT_SCREEN_FOREGROUND_APP,
-    ON_CHAT_SCREEN_BACKGROUND_APP,
-    NOT_ON_CHAT_SCREEN_BACKGROUND_APP
-}

@@ -11,7 +11,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/chat" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/lazy_cache" />
             <option value="$PROJECT_DIR$/lru_cache" />
