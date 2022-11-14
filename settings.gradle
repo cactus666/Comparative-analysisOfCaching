@@ -1,2 +1,6 @@
-include ':app', ':chat'
+include ':write_through_cache', ':chat'
 rootProject.name='SampleChat'
+include ':sync_cache'
+include ':lru_cache'
+include ':lazy_cache'
+include ':core'
