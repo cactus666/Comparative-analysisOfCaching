@@ -3,7 +3,8 @@ package com.example.core
 abstract class Storage <R> {
 
     fun getData(args: Map<String, Any>): R? {
-        TODO()
+        return getDataFromRemote(args)
+//        TODO()
     }
 
     abstract fun getDataFromRemote(args: Map<String, Any>): R?
