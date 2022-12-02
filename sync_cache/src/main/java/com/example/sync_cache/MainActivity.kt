@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.test).setOnClickListener {
             val res = SyncRepository(SyncStorage()).getTestData(
-                (1..5).random()
+                (0..5).random()
             )
             Log.d("TESTEST", "RES: ${res};")
         }
@@ -45,13 +45,18 @@ class SyncStorage(
         } else {
             args.get("article_id")
         }
+
+        val articles = arrayOf(
+            "article1",
+            "article2",
+            "article3",
+            "article4",
+            "article5",
+            "default",
+        )
+
         return ResultTest(
-            when (articleId) {
-                1 -> """article1article1article1article1article1article1article1article1article1"""
-                2 -> """article2article2article2article2article2article2article2article2article2"""
-                3 -> """article3article3article3article3article3article3article3article3article3"""
-                else -> """defaultArticledefaultArticledefaultArticledefaultArticledefaultArticle"""
-            }
+            articles[articleId as Int]
         )
     }
 }
