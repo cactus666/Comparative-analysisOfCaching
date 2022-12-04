@@ -32,7 +32,7 @@ class TestStorage(
     private val testApi: TestApi
 ): Storage<ResultTest>() {
 
-    override fun getDataFromRemote(args: Map<String, Any>): ResultTest? {
+    override fun getDataFromRemote(context: Context, args: Map<String, Any>): ResultTest? {
         val body = (args["body"] as? BodyTest) ?: return null
         val path = (args["path"] as? String) ?: return null
         return testApi.test(body, path).toData()

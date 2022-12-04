@@ -19,17 +19,17 @@ abstract class Storage <R> {
             Strategy.SYNCHRONIZED -> getDataFromSynchronizedCache(context, clazz, args)
             Strategy.WRITE_THROUGH -> getDataFromWriteThroughCache(context, clazz, args)
             Strategy.LRU -> getDataFromLruCache(context, clazz, args)
-            else -> getDataFromRemote(args)
+            else -> getDataFromRemote(context, args)
         }
     }
 
-    abstract fun getDataFromRemote(args: Map<String, Any>): R?
+    abstract fun getDataFromRemote(context: Context, args: Map<String, Any>): R?
 
     private fun getDataFromLazyCache(context: Context, clazz: Class<R>, args: Map<String, Any>): R? {
         val key = generateKey(args)
         val dataFromCache = getData(context, key, clazz)
         return if (dataFromCache == null) {
-            val remoteData = getDataFromRemote(args)
+            val remoteData = getDataFromRemote(context, args)
             saveData(context, key, remoteData)
             remoteData
         } else {
@@ -44,7 +44,7 @@ abstract class Storage <R> {
         } else {
             val key = generateKey(args)
             removeData(context, key)
-            val remoteData = getDataFromRemote(args)
+            val remoteData = getDataFromRemote(context, args)
             saveData(context, key, remoteData)
             remoteData
         }
@@ -57,7 +57,7 @@ abstract class Storage <R> {
         } else {
             val key = generateKey(args)
             removeData(context, key)
-            val remoteData = getDataFromRemote(args)
+            val remoteData = getDataFromRemote(context, args)
             val isUploadNewDataSuccess = getRandomBoolean()
             if (isUploadNewDataSuccess) {
                 saveData(context, key, remoteData)

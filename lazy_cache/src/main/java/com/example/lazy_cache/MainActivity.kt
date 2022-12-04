@@ -6,16 +6,16 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.core.Storage
-import com.example.core.Strategy
-import com.example.core.trackRemote
-import com.example.core.trackRequest
+import com.example.core.*
 import java.io.Serializable
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Log.d("TEST_LOG_ANAL", "Get count request before: ${getCountRequestBefore(this, Strategy.LAZY)};")
+        Log.d("TEST_LOG_ANAL", "Get count request after: ${getCountRequestAfter(this, Strategy.LAZY)};")
 
         findViewById<TextView>(R.id.test1).setOnClickListener {
             val res = LazyRepository(LazyStorage()).getTestData(this, 1)
@@ -37,8 +37,8 @@ data class ResultTest(
 
 class LazyStorage: Storage<ResultTest>() {
 
-    override fun getDataFromRemote(args: Map<String, Any>): ResultTest {
-        trackRemote(Strategy.LRU)
+    override fun getDataFromRemote(context: Context, args: Map<String, Any>): ResultTest {
+        trackRemote(context, Strategy.LAZY)
         val page = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             args.getOrDefault("page", 1)
         } else {
@@ -59,10 +59,10 @@ class LazyRepository(
 ) {
 
     fun getTestData(context: Context, page: Int): ResultTest? {
-        trackRequest(Strategy.LRU)
+        trackRequest(context, Strategy.LAZY)
         return lazyStorage.getData(
             context,
-            Strategy.LRU,
+            Strategy.LAZY,
             ResultTest::class.java,
             mapOf("page" to page)
         )
