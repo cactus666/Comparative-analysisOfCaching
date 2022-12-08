@@ -1,5 +1,6 @@
 package com.example.core
 
+import android.content.Context
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -31,7 +32,7 @@ class TestStorage(
     private val testApi: TestApi
 ): Storage<ResultTest>() {
 
-    override fun getDataFromRemote(args: Map<String, Any>): ResultTest? {
+    override fun getDataFromRemote(context: Context, args: Map<String, Any>): ResultTest? {
         val body = (args["body"] as? BodyTest) ?: return null
         val path = (args["path"] as? String) ?: return null
         return testApi.test(body, path).toData()
@@ -42,8 +43,11 @@ class TestRepository(
     private val testStorage: TestStorage
 ) {
 
-    fun getTestData(): ResultTest? {
+    fun getTestData(context: Context): ResultTest? {
         return testStorage.getData(
+            context,
+            null,
+            ResultTest::class.java,
             mapOf(
                 "body" to BodyTest("1"),
                 "path" to "2"
