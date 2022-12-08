@@ -1,13 +1,12 @@
 package com.example.sync_cache
 
+import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import com.example.core.Storage
-import com.example.core.TestApi
-import com.example.core.toData
+import com.example.core.*
 import java.io.Serializable
 
 class MainActivity : AppCompatActivity() {
@@ -15,8 +14,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Log.d("TEST_LOG_ANAL", "Get count request before: ${getCountRequestBefore(this, Strategy.SYNCHRONIZED)};")
+        Log.d("TEST_LOG_ANAL", "Get count request after: ${getCountRequestAfter(this, Strategy.SYNCHRONIZED)};")
+
         findViewById<TextView>(R.id.test).setOnClickListener {
             val res = SyncRepository(SyncStorage()).getTestData(
+                this,
                 (0..5).random()
             )
             Log.d("TESTEST", "RES: ${res};")
@@ -39,7 +42,8 @@ data class ResultTest(
 class SyncStorage(
 ): Storage<ResultTest>() {
 
-    override fun getDataFromRemote(args: Map<String, Any>): ResultTest? {
+    override fun getDataFromRemote(context: Context, args: Map<String, Any>): ResultTest? {
+        trackRemote(context, Strategy.SYNCHRONIZED)
         val articleId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             args.getOrDefault("article_id", 0)
         } else {
@@ -65,9 +69,13 @@ class SyncRepository(
     private val syncStorage: SyncStorage
 ) {
 
-    fun getTestData(articleId: Int): ResultTest? {
+    fun getTestData(context: Context, articleId: Int): ResultTest? {
+        trackRequest(context, Strategy.SYNCHRONIZED)
         return syncStorage.getData(
-            mapOf("article_id" to articleId)
+            args=mapOf("article_id" to articleId),
+            context=context,
+            clazz=ResultTest::class.java,
+            strategy=Strategy.SYNCHRONIZED
         )
     }
 }
