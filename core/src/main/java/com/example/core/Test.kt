@@ -26,8 +26,6 @@ class ResultTest(
 
 
 
-
-
 class TestStorage(
     private val testApi: TestApi
 ): Storage<ResultTest>() {
